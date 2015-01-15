@@ -18,6 +18,15 @@ from flaskext.uploads import (UploadSet, UploadConfiguration, extension,
     TestingFileStorage, patch_request_class, configure_uploads, addslash,
     ALL, AllExcept, UploadsManager)
 
+try:
+    from flask import Blueprint
+except ImportError:
+    from flask import Module
+
+    using_blueprints = False
+else:
+    using_blueprints = True
+
 
 class TestMiscellaneous(object):
     def test_tfs(self):
@@ -317,4 +326,7 @@ class TestPathsAndURLs(object):
         with app.test_request_context():
             url = uset.url('foo.txt')
             assert url == 'http://localhost:5001/foo.txt'
-        assert '_uploads' not in app.modules
+        if using_blueprints:
+            assert '_uploads' not in app.blueprints
+        else:
+            assert '_uploads' not in app.modules
