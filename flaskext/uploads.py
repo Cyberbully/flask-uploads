@@ -403,6 +403,7 @@ class UploadSet(object):
         
         :param ext: The extension to check, without the dot.
         """
+        ext = ext.lower()
         return ((ext in self.config.allow) or
                 (ext in self.extensions and ext not in self.config.deny))
 
